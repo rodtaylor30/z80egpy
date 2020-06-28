@@ -101,9 +101,7 @@ def get_register16_int(register0, register1):
    return registerValue16
 
 """
-65Assuming this is file mymodule.py, then this string, being the
-first statement in the file, will become the "mymodule" module's
-docstring when the file is imported.
+
 """
 def set_register(register,registerValue):
    commandValue = ''
@@ -129,6 +127,12 @@ def set_register(register,registerValue):
    elif register == 'L':
       entryTextRegL.set(registerValue)
       commandValue = commandValue + '101'
+   elif register == 'IX':
+      entryTextRegIX.set(registerValue)
+      commandValue = commandValue
+   elif register == 'IY':
+      entryTextRegIY.set(registerValue)
+      commandValue = commandValue
 
    return commandValue
 
@@ -195,17 +199,27 @@ def show_entry_fields():
       address16 = get_register16_int('H', 'L')
       registerDest = ldCmd[0]
       set_register(registerDest, ram[address16])
-   elif parse_input(r'LD ' + regExConst8 + r'\s*,\s*\[IX\s*+' + regExConst8 + r'\s*\]'):
+##   elif parse_input(r'LD ' + regExConst8hex + r'\s*,\s*\[IX\s*+' + regExConst8hex + r'\s*\]'):
+##      ldCmd = commandMatch.group(0)
+##      print(ldCmd)
+##      ldCmd = ldCmd[3:]             # remove prefix
+##      print(ldCmd)
+##      ldCmd = re.split(",", ldCmd)
+##      constValue = ldCmd[0]
+##      print(ldCmd)
+##
+##      #ldCmd
+##      #parse ?
+   elif parse_input(r'LD IX\s*,\s*' + regExConst16hex):
       ldCmd = commandMatch.group(0)
       print(ldCmd)
       ldCmd = ldCmd[3:]             # remove prefix
       print(ldCmd)
       ldCmd = re.split(",", ldCmd)
-      constValue = ldCmd[0]
-      print(ldCmd)
-
-      #ldCmd
-      #parse ?
+      register = ldCmd[0]
+      registerValue = ldCmd[1]
+      commandValue = '0b1101110100100001' + set_register(register,registerValue)
+      insert_command_value(commandValue)
    else:
       print("Invalid command")
 
